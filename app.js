@@ -15,9 +15,14 @@ app.use("/api/contacts", contactsRouter);
 
 
 // handle 404 response
+app.use((req, res, next) => {
+    return next(new ApiError(404, "resuorce not found"));
+})
+
 app.use((err, req, res, next) => {
-    console.error(err.stack)
-    res.status(500).send('Something broke!')
-  })
+    return res.status(ApiError.statusCode || 500).json({
+        message: ApiError.message || "Internal Server Error",
+    });
+});
 
 module.exports = app;
